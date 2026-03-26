@@ -1,0 +1,603 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+      <Schema Namespace="Хранилище TutorAppointmentModel" Provider="System.Data.SqlClient" ProviderManifestToken="2008" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="booking">
+          <Key>
+            <PropertyRef Name="booking_id" />
+          </Key>
+          <Property Name="booking_id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="tutor_id" Type="int" Nullable="false" />
+          <Property Name="student_id" Type="int" Nullable="false" />
+          <Property Name="notes" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="status_id" Type="int" Nullable="false" />
+          <Property Name="date" Type="date" Nullable="false" />
+          <Property Name="start_time" Type="time" Precision="7" />
+          <Property Name="end_time" Type="time" Precision="7" />
+        </EntityType>
+        <EntityType Name="favorites">
+          <Key>
+            <PropertyRef Name="favorits_id" />
+          </Key>
+          <Property Name="favorits_id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="student_id" Type="int" Nullable="false" />
+          <Property Name="tutor_id" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="role">
+          <Key>
+            <PropertyRef Name="role_id" />
+          </Key>
+          <Property Name="role_id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="role_name" Type="varchar" MaxLength="50" Nullable="false" />
+        </EntityType>
+        <EntityType Name="status">
+          <Key>
+            <PropertyRef Name="status_id" />
+          </Key>
+          <Property Name="status_id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="status_name" Type="varchar" MaxLength="50" />
+        </EntityType>
+        <EntityType Name="student">
+          <Key>
+            <PropertyRef Name="student_id" />
+          </Key>
+          <Property Name="student_id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="login" Type="varchar" MaxLength="50" />
+          <Property Name="password" Type="varchar" MaxLength="50" />
+          <Property Name="fio" Type="varchar" MaxLength="50" />
+          <Property Name="phone" Type="varchar" MaxLength="50" />
+          <Property Name="mail" Type="varchar" MaxLength="50" />
+          <Property Name="grade" Type="varchar" MaxLength="50" />
+        </EntityType>
+        <EntityType Name="Subjects">
+          <Key>
+            <PropertyRef Name="subjects_id" />
+          </Key>
+          <Property Name="subjects_id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="subject_name" Type="nvarchar" MaxLength="50" />
+        </EntityType>
+        <EntityType Name="subjectsTutor">
+          <Key>
+            <PropertyRef Name="subjectTutor_id" />
+          </Key>
+          <Property Name="subjectTutor_id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="tutor_id" Type="int" Nullable="false" />
+          <Property Name="subject_id" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="sysdiagrams">
+          <Key>
+            <PropertyRef Name="diagram_id" />
+          </Key>
+          <Property Name="name" Type="nvarchar" MaxLength="128" Nullable="false" />
+          <Property Name="principal_id" Type="int" Nullable="false" />
+          <Property Name="diagram_id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="version" Type="int" />
+          <Property Name="definition" Type="varbinary(max)" />
+        </EntityType>
+        <EntityType Name="tutor">
+          <Key>
+            <PropertyRef Name="tutor_id" />
+          </Key>
+          <Property Name="tutor_id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="login" Type="varchar" MaxLength="50" />
+          <Property Name="password" Type="varchar" MaxLength="50" />
+          <Property Name="role_id" Type="int" Nullable="false" />
+          <Property Name="fio" Type="varchar" MaxLength="50" />
+          <Property Name="phone" Type="varchar" MaxLength="50" />
+          <Property Name="mail" Type="varchar" MaxLength="50" />
+          <Property Name="raiting" Type="varchar" MaxLength="50" />
+          <Property Name="info" Type="varchar" MaxLength="50" />
+        </EntityType>
+        <Association Name="FK_booking_status">
+          <End Role="status" Type="Self.status" Multiplicity="1" />
+          <End Role="booking" Type="Self.booking" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="status">
+              <PropertyRef Name="status_id" />
+            </Principal>
+            <Dependent Role="booking">
+              <PropertyRef Name="status_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_booking_student">
+          <End Role="student" Type="Self.student" Multiplicity="1" />
+          <End Role="booking" Type="Self.booking" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="student">
+              <PropertyRef Name="student_id" />
+            </Principal>
+            <Dependent Role="booking">
+              <PropertyRef Name="student_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_booking_tutor">
+          <End Role="tutor" Type="Self.tutor" Multiplicity="1" />
+          <End Role="booking" Type="Self.booking" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="tutor">
+              <PropertyRef Name="tutor_id" />
+            </Principal>
+            <Dependent Role="booking">
+              <PropertyRef Name="tutor_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_favorites_student">
+          <End Role="student" Type="Self.student" Multiplicity="1" />
+          <End Role="favorites" Type="Self.favorites" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="student">
+              <PropertyRef Name="student_id" />
+            </Principal>
+            <Dependent Role="favorites">
+              <PropertyRef Name="student_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_favorites_tutor">
+          <End Role="tutor" Type="Self.tutor" Multiplicity="1" />
+          <End Role="favorites" Type="Self.favorites" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="tutor">
+              <PropertyRef Name="tutor_id" />
+            </Principal>
+            <Dependent Role="favorites">
+              <PropertyRef Name="tutor_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_subjectsTutor_Subjects">
+          <End Role="Subjects" Type="Self.Subjects" Multiplicity="1" />
+          <End Role="subjectsTutor" Type="Self.subjectsTutor" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Subjects">
+              <PropertyRef Name="subjects_id" />
+            </Principal>
+            <Dependent Role="subjectsTutor">
+              <PropertyRef Name="subject_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_subjectsTutor_tutor">
+          <End Role="tutor" Type="Self.tutor" Multiplicity="1" />
+          <End Role="subjectsTutor" Type="Self.subjectsTutor" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="tutor">
+              <PropertyRef Name="tutor_id" />
+            </Principal>
+            <Dependent Role="subjectsTutor">
+              <PropertyRef Name="tutor_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_tutor_role">
+          <End Role="role" Type="Self.role" Multiplicity="1" />
+          <End Role="tutor" Type="Self.tutor" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="role">
+              <PropertyRef Name="role_id" />
+            </Principal>
+            <Dependent Role="tutor">
+              <PropertyRef Name="role_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="Хранилище TutorAppointmentModelContainer">
+          <EntitySet Name="booking" EntityType="Self.booking" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="favorites" EntityType="Self.favorites" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="role" EntityType="Self.role" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="status" EntityType="Self.status" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="student" EntityType="Self.student" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Subjects" EntityType="Self.Subjects" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="subjectsTutor" EntityType="Self.subjectsTutor" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="sysdiagrams" EntityType="Self.sysdiagrams" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="tutor" EntityType="Self.tutor" Schema="dbo" store:Type="Tables" />
+          <AssociationSet Name="FK_booking_status" Association="Self.FK_booking_status">
+            <End Role="status" EntitySet="status" />
+            <End Role="booking" EntitySet="booking" />
+          </AssociationSet>
+          <AssociationSet Name="FK_booking_student" Association="Self.FK_booking_student">
+            <End Role="student" EntitySet="student" />
+            <End Role="booking" EntitySet="booking" />
+          </AssociationSet>
+          <AssociationSet Name="FK_booking_tutor" Association="Self.FK_booking_tutor">
+            <End Role="tutor" EntitySet="tutor" />
+            <End Role="booking" EntitySet="booking" />
+          </AssociationSet>
+          <AssociationSet Name="FK_favorites_student" Association="Self.FK_favorites_student">
+            <End Role="student" EntitySet="student" />
+            <End Role="favorites" EntitySet="favorites" />
+          </AssociationSet>
+          <AssociationSet Name="FK_favorites_tutor" Association="Self.FK_favorites_tutor">
+            <End Role="tutor" EntitySet="tutor" />
+            <End Role="favorites" EntitySet="favorites" />
+          </AssociationSet>
+          <AssociationSet Name="FK_subjectsTutor_Subjects" Association="Self.FK_subjectsTutor_Subjects">
+            <End Role="Subjects" EntitySet="Subjects" />
+            <End Role="subjectsTutor" EntitySet="subjectsTutor" />
+          </AssociationSet>
+          <AssociationSet Name="FK_subjectsTutor_tutor" Association="Self.FK_subjectsTutor_tutor">
+            <End Role="tutor" EntitySet="tutor" />
+            <End Role="subjectsTutor" EntitySet="subjectsTutor" />
+          </AssociationSet>
+          <AssociationSet Name="FK_tutor_role" Association="Self.FK_tutor_role">
+            <End Role="role" EntitySet="role" />
+            <End Role="tutor" EntitySet="tutor" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema>
+    </edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="TutorAppointmentModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityType Name="booking">
+          <Key>
+            <PropertyRef Name="booking_id" />
+          </Key>
+          <Property Name="booking_id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="tutor_id" Type="Int32" Nullable="false" />
+          <Property Name="student_id" Type="Int32" Nullable="false" />
+          <Property Name="notes" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="status_id" Type="Int32" Nullable="false" />
+          <Property Name="date" Type="DateTime" Nullable="false" Precision="0" />
+          <Property Name="start_time" Type="Time" Precision="7" />
+          <Property Name="end_time" Type="Time" Precision="7" />
+          <NavigationProperty Name="status" Relationship="Self.FK_booking_status" FromRole="booking" ToRole="status" />
+          <NavigationProperty Name="student" Relationship="Self.FK_booking_student" FromRole="booking" ToRole="student" />
+          <NavigationProperty Name="tutor" Relationship="Self.FK_booking_tutor" FromRole="booking" ToRole="tutor" />
+        </EntityType>
+        <EntityType Name="favorites">
+          <Key>
+            <PropertyRef Name="favorits_id" />
+          </Key>
+          <Property Name="favorits_id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="student_id" Type="Int32" Nullable="false" />
+          <Property Name="tutor_id" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="student" Relationship="Self.FK_favorites_student" FromRole="favorites" ToRole="student" />
+          <NavigationProperty Name="tutor" Relationship="Self.FK_favorites_tutor" FromRole="favorites" ToRole="tutor" />
+        </EntityType>
+        <EntityType Name="role">
+          <Key>
+            <PropertyRef Name="role_id" />
+          </Key>
+          <Property Name="role_id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="role_name" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+          <NavigationProperty Name="tutor" Relationship="Self.FK_tutor_role" FromRole="role" ToRole="tutor" />
+        </EntityType>
+        <EntityType Name="status">
+          <Key>
+            <PropertyRef Name="status_id" />
+          </Key>
+          <Property Name="status_id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="status_name" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="booking" Relationship="Self.FK_booking_status" FromRole="status" ToRole="booking" />
+        </EntityType>
+        <EntityType Name="student">
+          <Key>
+            <PropertyRef Name="student_id" />
+          </Key>
+          <Property Name="student_id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="login" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="password" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="fio" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="phone" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="mail" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="grade" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="booking" Relationship="Self.FK_booking_student" FromRole="student" ToRole="booking" />
+          <NavigationProperty Name="favorites" Relationship="Self.FK_favorites_student" FromRole="student" ToRole="favorites" />
+        </EntityType>
+        <EntityType Name="Subjects">
+          <Key>
+            <PropertyRef Name="subjects_id" />
+          </Key>
+          <Property Name="subjects_id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="subject_name" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="subjectsTutor" Relationship="Self.FK_subjectsTutor_Subjects" FromRole="Subjects" ToRole="subjectsTutor" />
+        </EntityType>
+        <EntityType Name="subjectsTutor">
+          <Key>
+            <PropertyRef Name="subjectTutor_id" />
+          </Key>
+          <Property Name="subjectTutor_id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="tutor_id" Type="Int32" Nullable="false" />
+          <Property Name="subject_id" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="Subjects" Relationship="Self.FK_subjectsTutor_Subjects" FromRole="subjectsTutor" ToRole="Subjects" />
+          <NavigationProperty Name="tutor" Relationship="Self.FK_subjectsTutor_tutor" FromRole="subjectsTutor" ToRole="tutor" />
+        </EntityType>
+        <EntityType Name="sysdiagrams">
+          <Key>
+            <PropertyRef Name="diagram_id" />
+          </Key>
+          <Property Name="name" Type="String" MaxLength="128" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="principal_id" Type="Int32" Nullable="false" />
+          <Property Name="diagram_id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="version" Type="Int32" />
+          <Property Name="definition" Type="Binary" MaxLength="Max" FixedLength="false" />
+        </EntityType>
+        <EntityType Name="tutor">
+          <Key>
+            <PropertyRef Name="tutor_id" />
+          </Key>
+          <Property Name="tutor_id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="login" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="password" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="role_id" Type="Int32" Nullable="false" />
+          <Property Name="fio" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="phone" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="mail" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="raiting" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="info" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="booking" Relationship="Self.FK_booking_tutor" FromRole="tutor" ToRole="booking" />
+          <NavigationProperty Name="favorites" Relationship="Self.FK_favorites_tutor" FromRole="tutor" ToRole="favorites" />
+          <NavigationProperty Name="role" Relationship="Self.FK_tutor_role" FromRole="tutor" ToRole="role" />
+          <NavigationProperty Name="subjectsTutor" Relationship="Self.FK_subjectsTutor_tutor" FromRole="tutor" ToRole="subjectsTutor" />
+        </EntityType>
+        <Association Name="FK_booking_status">
+          <End Role="status" Type="Self.status" Multiplicity="1" />
+          <End Role="booking" Type="Self.booking" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="status">
+              <PropertyRef Name="status_id" />
+            </Principal>
+            <Dependent Role="booking">
+              <PropertyRef Name="status_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_booking_student">
+          <End Role="student" Type="Self.student" Multiplicity="1" />
+          <End Role="booking" Type="Self.booking" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="student">
+              <PropertyRef Name="student_id" />
+            </Principal>
+            <Dependent Role="booking">
+              <PropertyRef Name="student_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_booking_tutor">
+          <End Role="tutor" Type="Self.tutor" Multiplicity="1" />
+          <End Role="booking" Type="Self.booking" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="tutor">
+              <PropertyRef Name="tutor_id" />
+            </Principal>
+            <Dependent Role="booking">
+              <PropertyRef Name="tutor_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_favorites_student">
+          <End Role="student" Type="Self.student" Multiplicity="1" />
+          <End Role="favorites" Type="Self.favorites" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="student">
+              <PropertyRef Name="student_id" />
+            </Principal>
+            <Dependent Role="favorites">
+              <PropertyRef Name="student_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_favorites_tutor">
+          <End Role="tutor" Type="Self.tutor" Multiplicity="1" />
+          <End Role="favorites" Type="Self.favorites" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="tutor">
+              <PropertyRef Name="tutor_id" />
+            </Principal>
+            <Dependent Role="favorites">
+              <PropertyRef Name="tutor_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_tutor_role">
+          <End Role="role" Type="Self.role" Multiplicity="1" />
+          <End Role="tutor" Type="Self.tutor" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="role">
+              <PropertyRef Name="role_id" />
+            </Principal>
+            <Dependent Role="tutor">
+              <PropertyRef Name="role_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_subjectsTutor_Subjects">
+          <End Role="Subjects" Type="Self.Subjects" Multiplicity="1" />
+          <End Role="subjectsTutor" Type="Self.subjectsTutor" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Subjects">
+              <PropertyRef Name="subjects_id" />
+            </Principal>
+            <Dependent Role="subjectsTutor">
+              <PropertyRef Name="subject_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_subjectsTutor_tutor">
+          <End Role="tutor" Type="Self.tutor" Multiplicity="1" />
+          <End Role="subjectsTutor" Type="Self.subjectsTutor" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="tutor">
+              <PropertyRef Name="tutor_id" />
+            </Principal>
+            <Dependent Role="subjectsTutor">
+              <PropertyRef Name="tutor_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="TutorAppointmentEntities" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="booking" EntityType="Self.booking" />
+          <EntitySet Name="favorites" EntityType="Self.favorites" />
+          <EntitySet Name="role" EntityType="Self.role" />
+          <EntitySet Name="status" EntityType="Self.status" />
+          <EntitySet Name="student" EntityType="Self.student" />
+          <EntitySet Name="Subjects" EntityType="Self.Subjects" />
+          <EntitySet Name="subjectsTutor" EntityType="Self.subjectsTutor" />
+          <EntitySet Name="sysdiagrams" EntityType="Self.sysdiagrams" />
+          <EntitySet Name="tutor" EntityType="Self.tutor" />
+          <AssociationSet Name="FK_booking_status" Association="Self.FK_booking_status">
+            <End Role="status" EntitySet="status" />
+            <End Role="booking" EntitySet="booking" />
+          </AssociationSet>
+          <AssociationSet Name="FK_booking_student" Association="Self.FK_booking_student">
+            <End Role="student" EntitySet="student" />
+            <End Role="booking" EntitySet="booking" />
+          </AssociationSet>
+          <AssociationSet Name="FK_booking_tutor" Association="Self.FK_booking_tutor">
+            <End Role="tutor" EntitySet="tutor" />
+            <End Role="booking" EntitySet="booking" />
+          </AssociationSet>
+          <AssociationSet Name="FK_favorites_student" Association="Self.FK_favorites_student">
+            <End Role="student" EntitySet="student" />
+            <End Role="favorites" EntitySet="favorites" />
+          </AssociationSet>
+          <AssociationSet Name="FK_favorites_tutor" Association="Self.FK_favorites_tutor">
+            <End Role="tutor" EntitySet="tutor" />
+            <End Role="favorites" EntitySet="favorites" />
+          </AssociationSet>
+          <AssociationSet Name="FK_tutor_role" Association="Self.FK_tutor_role">
+            <End Role="role" EntitySet="role" />
+            <End Role="tutor" EntitySet="tutor" />
+          </AssociationSet>
+          <AssociationSet Name="FK_subjectsTutor_Subjects" Association="Self.FK_subjectsTutor_Subjects">
+            <End Role="Subjects" EntitySet="Subjects" />
+            <End Role="subjectsTutor" EntitySet="subjectsTutor" />
+          </AssociationSet>
+          <AssociationSet Name="FK_subjectsTutor_tutor" Association="Self.FK_subjectsTutor_tutor">
+            <End Role="tutor" EntitySet="tutor" />
+            <End Role="subjectsTutor" EntitySet="subjectsTutor" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="Хранилище TutorAppointmentModelContainer" CdmEntityContainer="TutorAppointmentEntities">
+          <EntitySetMapping Name="booking">
+            <EntityTypeMapping TypeName="TutorAppointmentModel.booking">
+              <MappingFragment StoreEntitySet="booking">
+                <ScalarProperty Name="booking_id" ColumnName="booking_id" />
+                <ScalarProperty Name="tutor_id" ColumnName="tutor_id" />
+                <ScalarProperty Name="student_id" ColumnName="student_id" />
+                <ScalarProperty Name="notes" ColumnName="notes" />
+                <ScalarProperty Name="status_id" ColumnName="status_id" />
+                <ScalarProperty Name="date" ColumnName="date" />
+                <ScalarProperty Name="start_time" ColumnName="start_time" />
+                <ScalarProperty Name="end_time" ColumnName="end_time" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="favorites">
+            <EntityTypeMapping TypeName="TutorAppointmentModel.favorites">
+              <MappingFragment StoreEntitySet="favorites">
+                <ScalarProperty Name="favorits_id" ColumnName="favorits_id" />
+                <ScalarProperty Name="student_id" ColumnName="student_id" />
+                <ScalarProperty Name="tutor_id" ColumnName="tutor_id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="role">
+            <EntityTypeMapping TypeName="TutorAppointmentModel.role">
+              <MappingFragment StoreEntitySet="role">
+                <ScalarProperty Name="role_id" ColumnName="role_id" />
+                <ScalarProperty Name="role_name" ColumnName="role_name" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="status">
+            <EntityTypeMapping TypeName="TutorAppointmentModel.status">
+              <MappingFragment StoreEntitySet="status">
+                <ScalarProperty Name="status_id" ColumnName="status_id" />
+                <ScalarProperty Name="status_name" ColumnName="status_name" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="student">
+            <EntityTypeMapping TypeName="TutorAppointmentModel.student">
+              <MappingFragment StoreEntitySet="student">
+                <ScalarProperty Name="student_id" ColumnName="student_id" />
+                <ScalarProperty Name="login" ColumnName="login" />
+                <ScalarProperty Name="password" ColumnName="password" />
+                <ScalarProperty Name="fio" ColumnName="fio" />
+                <ScalarProperty Name="phone" ColumnName="phone" />
+                <ScalarProperty Name="mail" ColumnName="mail" />
+                <ScalarProperty Name="grade" ColumnName="grade" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Subjects">
+            <EntityTypeMapping TypeName="TutorAppointmentModel.Subjects">
+              <MappingFragment StoreEntitySet="Subjects">
+                <ScalarProperty Name="subjects_id" ColumnName="subjects_id" />
+                <ScalarProperty Name="subject_name" ColumnName="subject_name" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="subjectsTutor">
+            <EntityTypeMapping TypeName="TutorAppointmentModel.subjectsTutor">
+              <MappingFragment StoreEntitySet="subjectsTutor">
+                <ScalarProperty Name="subjectTutor_id" ColumnName="subjectTutor_id" />
+                <ScalarProperty Name="tutor_id" ColumnName="tutor_id" />
+                <ScalarProperty Name="subject_id" ColumnName="subject_id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="sysdiagrams">
+            <EntityTypeMapping TypeName="TutorAppointmentModel.sysdiagrams">
+              <MappingFragment StoreEntitySet="sysdiagrams">
+                <ScalarProperty Name="name" ColumnName="name" />
+                <ScalarProperty Name="principal_id" ColumnName="principal_id" />
+                <ScalarProperty Name="diagram_id" ColumnName="diagram_id" />
+                <ScalarProperty Name="version" ColumnName="version" />
+                <ScalarProperty Name="definition" ColumnName="definition" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="tutor">
+            <EntityTypeMapping TypeName="TutorAppointmentModel.tutor">
+              <MappingFragment StoreEntitySet="tutor">
+                <ScalarProperty Name="tutor_id" ColumnName="tutor_id" />
+                <ScalarProperty Name="login" ColumnName="login" />
+                <ScalarProperty Name="password" ColumnName="password" />
+                <ScalarProperty Name="role_id" ColumnName="role_id" />
+                <ScalarProperty Name="fio" ColumnName="fio" />
+                <ScalarProperty Name="phone" ColumnName="phone" />
+                <ScalarProperty Name="mail" ColumnName="mail" />
+                <ScalarProperty Name="raiting" ColumnName="raiting" />
+                <ScalarProperty Name="info" ColumnName="info" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="false" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="true" />
+        <DesignerProperty Name="UseLegacyProvider" Value="true" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="Нет" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams></Diagrams>
+  </Designer>
+</edmx:Edmx>

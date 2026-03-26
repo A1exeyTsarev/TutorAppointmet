@@ -10,9 +10,9 @@ using System.Windows.Forms;
 
 namespace TutorAppointment_New
 {
-    public partial class Form1 : Form
+    public partial class FavoritesForm : Form
     {
-        public Form1()
+        public FavoritesForm()
         {
             InitializeComponent();
         }

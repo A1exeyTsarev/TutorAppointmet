@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using TutorAppointment_New.AppData;
+using TutorAppointment_New;
 
 namespace TutorAppointment_New
 {
@@ -16,7 +18,12 @@ namespace TutorAppointment_New
         {
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            Application.Run(new Form1());
+
+            AppData.AppConnect.model01 = new TutorAppointmentEntities();
+
+
+            Application.Run(new Login());
+
         }
     }
 }

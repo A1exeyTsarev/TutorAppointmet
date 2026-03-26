@@ -103,6 +103,8 @@ namespace TutorAppointment_New
                 MessageBox.Show("Регистрация прошла успешно!", "Успех",
                                 MessageBoxButtons.OK, MessageBoxIcon.Information);
 
+
+
                 // Открываем окно StudentAccount с передачей ID
                 StudentAccount studentAccount = new StudentAccount(studentId);
                 studentAccount.Show();

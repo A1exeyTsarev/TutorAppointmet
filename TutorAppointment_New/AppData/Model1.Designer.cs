@@ -1,4 +1,4 @@
-﻿// Создание кода T4 для модели "C:\Users\10230049\source\repos\TutorAppointment_New\TutorAppointment_New\AppData\Model1.edmx" включено. 
+﻿// Создание кода T4 для модели "C:\Users\10230049\Source\Repos\TutorAppointmet\TutorAppointment_New\AppData\Model1.edmx" включено. 
 // Чтобы включить формирование кода прежних версий, измените значение свойства "Стратегия создания кода" конструктора
 // на "Legacy ObjectContext". Это свойство доступно в окне "Свойства", если модель
 // открыта в конструкторе.

@@ -4,12 +4,13 @@
   <edmx:Runtime>
     <!-- SSDL content -->
     <edmx:StorageModels>
-      <Schema Namespace="Хранилище TutorAppointmentModel" Provider="System.Data.SqlClient" ProviderManifestToken="2008" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+    <Schema Namespace="Хранилище TutorAppointmentModel" Provider="System.Data.SqlClient" ProviderManifestToken="2008" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
         <EntityType Name="booking">
           <Key>
             <PropertyRef Name="booking_id" />
           </Key>
           <Property Name="booking_id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="subject_id" Type="int" Nullable="false" />
           <Property Name="tutor_id" Type="int" Nullable="false" />
           <Property Name="student_id" Type="int" Nullable="false" />
           <Property Name="notes" Type="varchar" MaxLength="50" Nullable="false" />
@@ -115,6 +116,18 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <Association Name="FK_booking_Subjects">
+          <End Role="Subjects" Type="Self.Subjects" Multiplicity="1" />
+          <End Role="booking" Type="Self.booking" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Subjects">
+              <PropertyRef Name="subjects_id" />
+            </Principal>
+            <Dependent Role="booking">
+              <PropertyRef Name="subject_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <Association Name="FK_booking_tutor">
           <End Role="tutor" Type="Self.tutor" Multiplicity="1" />
           <End Role="booking" Type="Self.booking" Multiplicity="*" />
@@ -205,6 +218,10 @@
             <End Role="student" EntitySet="student" />
             <End Role="booking" EntitySet="booking" />
           </AssociationSet>
+          <AssociationSet Name="FK_booking_Subjects" Association="Self.FK_booking_Subjects">
+            <End Role="Subjects" EntitySet="Subjects" />
+            <End Role="booking" EntitySet="booking" />
+          </AssociationSet>
           <AssociationSet Name="FK_booking_tutor" Association="Self.FK_booking_tutor">
             <End Role="tutor" EntitySet="tutor" />
             <End Role="booking" EntitySet="booking" />
@@ -230,8 +247,7 @@
             <End Role="tutor" EntitySet="tutor" />
           </AssociationSet>
         </EntityContainer>
-      </Schema>
-    </edmx:StorageModels>
+      </Schema></edmx:StorageModels>
     <!-- CSDL content -->
     <edmx:ConceptualModels>
       <Schema Namespace="TutorAppointmentModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
@@ -250,6 +266,8 @@
           <NavigationProperty Name="status" Relationship="Self.FK_booking_status" FromRole="booking" ToRole="status" />
           <NavigationProperty Name="student" Relationship="Self.FK_booking_student" FromRole="booking" ToRole="student" />
           <NavigationProperty Name="tutor" Relationship="Self.FK_booking_tutor" FromRole="booking" ToRole="tutor" />
+          <Property Name="subject_id" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="Subjects" Relationship="TutorAppointmentModel.FK_booking_Subjects" FromRole="booking" ToRole="Subjects" />
         </EntityType>
         <EntityType Name="favorites">
           <Key>
@@ -298,6 +316,7 @@
           <Property Name="subjects_id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
           <Property Name="subject_name" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
           <NavigationProperty Name="subjectsTutor" Relationship="Self.FK_subjectsTutor_Subjects" FromRole="Subjects" ToRole="subjectsTutor" />
+          <NavigationProperty Name="booking" Relationship="TutorAppointmentModel.FK_booking_Subjects" FromRole="Subjects" ToRole="booking" />
         </EntityType>
         <EntityType Name="subjectsTutor">
           <Key>
@@ -475,7 +494,23 @@
             <End Role="tutor" EntitySet="tutor" />
             <End Role="subjectsTutor" EntitySet="subjectsTutor" />
           </AssociationSet>
+          <AssociationSet Name="FK_booking_Subjects" Association="TutorAppointmentModel.FK_booking_Subjects">
+            <End Role="Subjects" EntitySet="Subjects" />
+            <End Role="booking" EntitySet="booking" />
+          </AssociationSet>
         </EntityContainer>
+        <Association Name="FK_booking_Subjects">
+          <End Type="TutorAppointmentModel.Subjects" Role="Subjects" Multiplicity="1" />
+          <End Type="TutorAppointmentModel.booking" Role="booking" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Subjects">
+              <PropertyRef Name="subjects_id" />
+            </Principal>
+            <Dependent Role="booking">
+              <PropertyRef Name="subject_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
       </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -485,6 +520,7 @@
           <EntitySetMapping Name="booking">
             <EntityTypeMapping TypeName="TutorAppointmentModel.booking">
               <MappingFragment StoreEntitySet="booking">
+                <ScalarProperty Name="subject_id" ColumnName="subject_id" />
                 <ScalarProperty Name="booking_id" ColumnName="booking_id" />
                 <ScalarProperty Name="tutor_id" ColumnName="tutor_id" />
                 <ScalarProperty Name="student_id" ColumnName="student_id" />

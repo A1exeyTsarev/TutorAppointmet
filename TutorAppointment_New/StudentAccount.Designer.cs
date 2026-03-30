@@ -83,7 +83,6 @@
             this.dataGridViewSchedule.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
             this.dataGridViewSchedule.Size = new System.Drawing.Size(800, 241);
             this.dataGridViewSchedule.TabIndex = 4;
-            this.dataGridViewSchedule.CellContentClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGridViewSchedule_CellContentClick);
             // 
             // DateColumn
             // 
@@ -136,7 +135,6 @@
             this.panelScheduleHeader.Name = "panelScheduleHeader";
             this.panelScheduleHeader.Size = new System.Drawing.Size(800, 32);
             this.panelScheduleHeader.TabIndex = 5;
-            this.panelScheduleHeader.Paint += new System.Windows.Forms.PaintEventHandler(this.panelScheduleHeader_Paint);
             // 
             // labelScheduleTitle
             // 
@@ -174,7 +172,6 @@
             this.panelWelcome.Name = "panelWelcome";
             this.panelWelcome.Size = new System.Drawing.Size(800, 98);
             this.panelWelcome.TabIndex = 7;
-            this.panelWelcome.Paint += new System.Windows.Forms.PaintEventHandler(this.panelWelcome_Paint);
             // 
             // labelWelcome
             // 
@@ -233,7 +230,6 @@
             this.panelButtons.Name = "panelButtons";
             this.panelButtons.Size = new System.Drawing.Size(800, 57);
             this.panelButtons.TabIndex = 8;
-            this.panelButtons.Paint += new System.Windows.Forms.PaintEventHandler(this.panelButtons_Paint);
             // 
             // buttonNewLesson
             // 
@@ -250,6 +246,7 @@
             this.buttonNewLesson.TabIndex = 0;
             this.buttonNewLesson.Text = "📝 Записаться на новый урок";
             this.buttonNewLesson.UseVisualStyleBackColor = false;
+            this.buttonNewLesson.Click += new System.EventHandler(this.buttonNewLesson_Click);
             // 
             // buttonMyTutors
             // 
@@ -266,6 +263,7 @@
             this.buttonMyTutors.TabIndex = 1;
             this.buttonMyTutors.Text = "⭐ Мои учителя";
             this.buttonMyTutors.UseVisualStyleBackColor = false;
+            this.buttonMyTutors.Click += new System.EventHandler(this.buttonMyTutors_Click);
             // 
             // buttonFavorites
             // 
@@ -282,6 +280,7 @@
             this.buttonFavorites.TabIndex = 2;
             this.buttonFavorites.Text = "❤️ Избранное";
             this.buttonFavorites.UseVisualStyleBackColor = false;
+            this.buttonFavorites.Click += new System.EventHandler(this.buttonFavorites_Click);
             // 
             // buttonLogout
             // 
@@ -309,7 +308,6 @@
             this.statusStrip.Size = new System.Drawing.Size(800, 22);
             this.statusStrip.TabIndex = 6;
             this.statusStrip.Text = "statusStrip";
-            this.statusStrip.ItemClicked += new System.Windows.Forms.ToolStripItemClickedEventHandler(this.statusStrip_ItemClicked);
             // 
             // statusLabel
             // 

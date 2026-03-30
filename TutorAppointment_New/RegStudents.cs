@@ -5,14 +5,34 @@ using System.Text;
 using System.Windows.Forms;
 using TutorAppointment_New.AppData;
 
-
 namespace TutorAppointment_New
 {
     public partial class RegStudents : Form
     {
+        // Ограничения на количество символов
+        private const int MAX_FIO_LENGTH = 50;
+        private const int MAX_LOGIN_LENGTH = 15;
+        private const int MAX_PASSWORD_LENGTH = 15;
+        private const int MAX_EMAIL_LENGTH = 50;
+        private const int MAX_PHONE_LENGTH = 20;
+        private const int MAX_GRADE_LENGTH = 10;
+
+        private const int MIN_FIO_LENGTH = 5;
+        private const int MIN_LOGIN_LENGTH = 3;
+        private const int MIN_PASSWORD_LENGTH = 4;
+
         public RegStudents()
         {
             InitializeComponent();
+
+            // Устанавливаем максимальную длину для полей ввода
+            Fio.MaxLength = MAX_FIO_LENGTH;
+            Login.MaxLength = MAX_LOGIN_LENGTH;
+            Password.MaxLength = MAX_PASSWORD_LENGTH;
+            RepeatPassword.MaxLength = MAX_PASSWORD_LENGTH;
+            Email.MaxLength = MAX_EMAIL_LENGTH;
+            Phone.MaxLength = MAX_PHONE_LENGTH;
+            Grade.MaxLength = MAX_GRADE_LENGTH;
         }
 
         private void buttonReg_Click(object sender, EventArgs e)
@@ -28,13 +48,72 @@ namespace TutorAppointment_New
             string phone = Phone.Text.Trim();
             string grade = Grade.Text.Trim();
 
+            // ============ ПРОВЕРКИ ============
+
             // Проверка заполнения обязательных полей
-            if (string.IsNullOrEmpty(fio) ||
-                string.IsNullOrEmpty(login) ||
-                string.IsNullOrEmpty(password) ||
-                string.IsNullOrEmpty(repeatPassword))
+            if (string.IsNullOrEmpty(fio))
             {
-                message.Append("Не все обязательные поля заполнены!\n");
+                message.Append("Введите ФИО!\n");
+            }
+            if (string.IsNullOrEmpty(login))
+            {
+                message.Append("Введите логин!\n");
+            }
+            if (string.IsNullOrEmpty(password))
+            {
+                message.Append("Введите пароль!\n");
+            }
+            if (string.IsNullOrEmpty(repeatPassword))
+            {
+                message.Append("Повторите пароль!\n");
+            }
+
+            // Проверка ФИО (минимальная длина)
+            if (!string.IsNullOrEmpty(fio) && fio.Length < MIN_FIO_LENGTH)
+            {
+                message.Append($"ФИО должно содержать минимум {MIN_FIO_LENGTH} символов!\n");
+            }
+
+            // Проверка ФИО (максимальная длина)
+            if (fio.Length > MAX_FIO_LENGTH)
+            {
+                message.Append($"ФИО не может превышать {MAX_FIO_LENGTH} символов! (Сейчас: {fio.Length})\n");
+            }
+
+            // Проверка логина (минимальная длина)
+            if (!string.IsNullOrEmpty(login) && login.Length < MIN_LOGIN_LENGTH)
+            {
+                message.Append($"Логин должен содержать минимум {MIN_LOGIN_LENGTH} символа!\n");
+            }
+
+            // Проверка логина (максимальная длина)
+            if (login.Length > MAX_LOGIN_LENGTH)
+            {
+                message.Append($"Логин не может превышать {MAX_LOGIN_LENGTH} символов! (Сейчас: {login.Length})\n");
+            }
+
+            // Проверка логина (только буквы и цифры)
+            if (!string.IsNullOrEmpty(login) && !IsValidLogin(login))
+            {
+                message.Append("Логин может содержать только буквы латинского алфавита и цифры!\n");
+            }
+
+            // Проверка пароля (минимальная длина)
+            if (!string.IsNullOrEmpty(password) && password.Length < MIN_PASSWORD_LENGTH)
+            {
+                message.Append($"Пароль должен содержать минимум {MIN_PASSWORD_LENGTH} символа!\n");
+            }
+
+            // Проверка пароля (максимальная длина)
+            if (password.Length > MAX_PASSWORD_LENGTH)
+            {
+                message.Append($"Пароль не может превышать {MAX_PASSWORD_LENGTH} символов! (Сейчас: {password.Length})\n");
+            }
+
+            // Проверка пароля (не должен содержать пробелы)
+            if (!string.IsNullOrEmpty(password) && password.Contains(" "))
+            {
+                message.Append("Пароль не должен содержать пробелы!\n");
             }
 
             // Проверка совпадения паролей
@@ -43,19 +122,51 @@ namespace TutorAppointment_New
                 message.Append("Пароли не совпадают!\n");
             }
 
+            // Проверка email (если заполнен)
+            if (!string.IsNullOrEmpty(email))
+            {
+                if (email.Length > MAX_EMAIL_LENGTH)
+                {
+                    message.Append($"Email не может превышать {MAX_EMAIL_LENGTH} символов! (Сейчас: {email.Length})\n");
+                }
+                if (!IsValidEmail(email))
+                {
+                    message.Append("Введите корректный email (пример: user@example.com)!\n");
+                }
+            }
+
+            // Проверка телефона (если заполнен)
+            if (!string.IsNullOrEmpty(phone))
+            {
+                if (phone.Length > MAX_PHONE_LENGTH)
+                {
+                    message.Append($"Телефон не может превышать {MAX_PHONE_LENGTH} символов! (Сейчас: {phone.Length})\n");
+                }
+                if (!IsValidPhone(phone))
+                {
+                    message.Append("Телефон должен содержать только цифры, пробелы, знак + и дефис!\n");
+                }
+            }
+
+            // Проверка класса (если заполнен)
+            if (!string.IsNullOrEmpty(grade) && grade.Length > MAX_GRADE_LENGTH)
+            {
+                message.Append($"Класс не может превышать {MAX_GRADE_LENGTH} символов! (Сейчас: {grade.Length})\n");
+            }
+
             // Проверка уникальности логина
             try
             {
-                if (AppData.AppConnect.model01.student.Any(x => x.login == login))
+                if (!string.IsNullOrEmpty(login) && AppData.AppConnect.model01.student.Any(x => x.login == login))
                 {
-                    message.Append("Логин уже занят!\n");
+                    message.Append("Логин уже занят! Выберите другой.\n");
                 }
 
                 // Проверка уникальности email (если заполнен)
                 if (!string.IsNullOrEmpty(email) &&
                     AppData.AppConnect.model01.student.Any(x => x.mail == email))
                 {
-                    message.Append("Email уже используется!\n");
+                    message.Append("Email уже используется! Введите другой.\n");
                 }
 
                 // Проверка уникальности телефона (если заполнен)
@@ -91,24 +202,21 @@ namespace TutorAppointment_New
                     phone = string.IsNullOrEmpty(phone) ? null : phone,
                     mail = string.IsNullOrEmpty(email) ? null : email,
                     grade = string.IsNullOrEmpty(grade) ? null : grade
-                    // role_id удален, так как его нет в таблице student
                 };
 
                 AppData.AppConnect.model01.student.Add(newStudent);
                 AppData.AppConnect.model01.SaveChanges();
 
                 // Получаем ID созданного студента
-                int studentId = newStudent.student_id; // Или newStudent.id, смотрите в вашей модели
+                int studentId = newStudent.student_id;
 
                 MessageBox.Show("Регистрация прошла успешно!", "Успех",
                                 MessageBoxButtons.OK, MessageBoxIcon.Information);
 
-
-
                 // Открываем окно StudentAccount с передачей ID
                 StudentAccount studentAccount = new StudentAccount(studentId);
                 studentAccount.Show();
-                this.Close(); // Закрываем форму регистрации
+                this.Close();
             }
             catch (Exception ex)
             {
@@ -120,6 +228,46 @@ namespace TutorAppointment_New
                 MessageBox.Show(errorMessage, "Ошибка базы данных",
                                 MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
+        }
+
+        // Проверка валидности логина (только буквы и цифры)
+        private bool IsValidLogin(string login)
+        {
+            foreach (char c in login)
+            {
+                if (!char.IsLetterOrDigit(c))
+                {
+                    return false;
+                }
+            }
+            return true;
+        }
+
+        // Проверка валидности email
+        private bool IsValidEmail(string email)
+        {
+            try
+            {
+                var addr = new System.Net.Mail.MailAddress(email);
+                return addr.Address == email;
+            }
+            catch
+            {
+                return false;
+            }
+        }
+
+        // Проверка валидности телефона (цифры, пробелы, +, -)
+        private bool IsValidPhone(string phone)
+        {
+            foreach (char c in phone)
+            {
+                if (!char.IsDigit(c) && c != '+' && c != ' ' && c != '-' && c != '(' && c != ')')
+                {
+                    return false;
+                }
+            }
+            return true;
         }
 
         // Метод для очистки полей формы
@@ -150,11 +298,24 @@ namespace TutorAppointment_New
 
         }
 
-        
-
         private void buttonBack_Click_1(object sender, EventArgs e)
         {
             this.Close();
+        }
+
+        // Обработчики для отображения количества символов (опционально)
+        private void Login_TextChanged(object sender, EventArgs e)
+        {
+            int remaining = MAX_LOGIN_LENGTH - Login.Text.Length;
+            // Если есть label для отображения, раскомментируйте:
+            // labelLoginCounter.Text = $"Осталось: {remaining}";
+        }
+
+        private void Password_TextChanged(object sender, EventArgs e)
+        {
+            int remaining = MAX_PASSWORD_LENGTH - Password.Text.Length;
+            // Если есть label для отображения, раскомментируйте:
+            // labelPasswordCounter.Text = $"Осталось: {remaining}";
         }
     }
 }

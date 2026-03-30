@@ -2,14 +2,13 @@
 using System.Linq;
 using System.Windows.Forms;
 using TutorAppointment_New.AppData;
-using TutorAppointment_New;
-using TutorAppointment_New.AppData;
 
 namespace TutorAppointment_New
 {
     public partial class StudentAccount : Form
     {
         private int studentId;
+        private dynamic selectedBooking; // Для хранения выбранной записи
 
         // Конструктор - принимает ТОЛЬКО ID студента
         public StudentAccount(int id)
@@ -19,6 +18,9 @@ namespace TutorAppointment_New
 
             LoadStudentInfo();
             LoadSchedule();
+
+            // Подписываемся на событие двойного клика
+            dataGridViewSchedule.CellDoubleClick += DataGridViewSchedule_CellDoubleClick;
         }
 
         // Загрузка информации о студенте
@@ -36,7 +38,6 @@ namespace TutorAppointment_New
         }
 
         // Загрузка расписания
-        // Загрузка расписания
         private void LoadSchedule()
         {
             using (var db = new TutorAppointmentEntities())
@@ -47,6 +48,7 @@ namespace TutorAppointment_New
 
                 var schedule = bookings.Select(b => new
                 {
+                    booking_id = b.booking_id, // Добавляем ID записи для редактирования
                     Дата = b.date,
                     Время = b.start_time + " - " + b.end_time,
                     Предмет = GetSubjectByTutorId(b.tutor_id, db),
@@ -60,23 +62,74 @@ namespace TutorAppointment_New
 
                 dataGridViewSchedule.DataSource = schedule;
 
+                // Скрываем колонку с ID (не показываем пользователю)
+                if (dataGridViewSchedule.Columns["booking_id"] != null)
+                {
+                    dataGridViewSchedule.Columns["booking_id"].Visible = false;
+                }
+
                 // Настраиваем колонки
                 if (dataGridViewSchedule.Columns.Count > 0)
                 {
-                    dataGridViewSchedule.Columns["Дата"].Width = 100;
-                    dataGridViewSchedule.Columns["Время"].Width = 120;
-                    dataGridViewSchedule.Columns["Предмет"].Width = 120;
-                    dataGridViewSchedule.Columns["Преподаватель"].Width = 150;
-                    dataGridViewSchedule.Columns["Комментарий"].Width = 200;
-                    dataGridViewSchedule.Columns["Статус"].Width = 100;
-
+                    if (dataGridViewSchedule.Columns["Дата"] != null)
+                        dataGridViewSchedule.Columns["Дата"].Width = 100;
+                    if (dataGridViewSchedule.Columns["Время"] != null)
+                        dataGridViewSchedule.Columns["Время"].Width = 120;
+                    if (dataGridViewSchedule.Columns["Предмет"] != null)
+                        dataGridViewSchedule.Columns["Предмет"].Width = 120;
+                    if (dataGridViewSchedule.Columns["Преподаватель"] != null)
+                        dataGridViewSchedule.Columns["Преподаватель"].Width = 150;
+                    if (dataGridViewSchedule.Columns["Комментарий"] != null)
+                        dataGridViewSchedule.Columns["Комментарий"].Width = 200;
+                    if (dataGridViewSchedule.Columns["Статус"] != null)
+                        dataGridViewSchedule.Columns["Статус"].Width = 100;
                 }
 
                 labelScheduleCount.Text = $"Всего занятий: {schedule.Count}";
             }
         }
 
-        // Получить предмет преподавателя
+        // Обработчик двойного клика по ячейке
+        private void DataGridViewSchedule_CellDoubleClick(object sender, DataGridViewCellEventArgs e)
+        {
+            // Проверяем, что клик не по заголовку и есть данные
+            if (e.RowIndex >= 0 && e.ColumnIndex >= 0)
+            {
+                try
+                {
+                    // Получаем ID записи из скрытой колонки
+                    int bookingId = (int)dataGridViewSchedule.Rows[e.RowIndex].Cells["booking_id"].Value;
+
+                    // Находим запись в базе данных
+                    var bookingToEdit = AppConnect.model01.booking
+                        .FirstOrDefault(b => b.booking_id == bookingId);
+
+                    if (bookingToEdit != null)
+                    {
+                        // Открываем форму редактирования
+                        EditLesson editForm = new EditLesson(bookingToEdit, studentId, this);
+                        editForm.ShowDialog();
+                    }
+                    else
+                    {
+                        MessageBox.Show("Запись не найдена!", "Ошибка",
+                            MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    }
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show("Ошибка при открытии записи: " + ex.Message, "Ошибка",
+                        MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
+            }
+        }
+
+        // НОВЫЙ МЕТОД: Обновление расписания
+        public void RefreshSchedule()
+        {
+            LoadSchedule(); // Вызываем метод загрузки расписания
+        }
+
         // Получить предмет преподавателя
         private string GetSubjectByTutorId(int tutorId, TutorAppointmentEntities db)
         {
@@ -89,7 +142,6 @@ namespace TutorAppointment_New
                 .FirstOrDefault();
 
             return subject ?? "Не указан";
-
         }
 
         // Получить имя преподавателя
@@ -146,6 +198,32 @@ namespace TutorAppointment_New
         }
 
         private void statusStrip_ItemClicked(object sender, ToolStripItemClickedEventArgs e)
+        {
+
+        }
+
+        private void buttonNewLesson_Click(object sender, EventArgs e)
+        {
+            // Передаем ID студента и ссылку на текущую форму
+            NewLesson NL = new NewLesson(studentId, this);
+            NL.Show();
+            this.Hide(); // Скрываем форму студента, пока открыта форма записи
+        }
+
+        private void buttonFavorites_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void buttonMyTutors_Click(object sender, EventArgs e)
+        {
+            // Открываем форму со списком преподавателей
+            //FindTutorForm findTutor = new FindTutorForm(studentId, this);
+           // findTutor.Show();
+            //this.Hide(); // Скрываем текущую форму
+        }
+
+        private void buttonLogout_Click_2(object sender, EventArgs e)
         {
 
         }

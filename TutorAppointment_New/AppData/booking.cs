@@ -22,9 +22,11 @@ namespace TutorAppointment_New.AppData
         public System.DateTime date { get; set; }
         public Nullable<System.TimeSpan> start_time { get; set; }
         public Nullable<System.TimeSpan> end_time { get; set; }
+        public int subject_id { get; set; }
     
         public virtual status status { get; set; }
         public virtual student student { get; set; }
         public virtual tutor tutor { get; set; }
+        public virtual Subjects Subjects { get; set; }
     }
 }

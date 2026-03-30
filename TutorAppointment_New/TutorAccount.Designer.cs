@@ -249,6 +249,7 @@
             this.buttonNewLesson.TabIndex = 0;
             this.buttonNewLesson.Text = "📝 Создать занятие";
             this.buttonNewLesson.UseVisualStyleBackColor = false;
+            this.buttonNewLesson.Click += new System.EventHandler(this.buttonNewLesson_Click_1);
             // 
             // buttonMyStudents
             // 
@@ -265,6 +266,7 @@
             this.buttonMyStudents.TabIndex = 1;
             this.buttonMyStudents.Text = "👨‍🎓 Мои ученики";
             this.buttonMyStudents.UseVisualStyleBackColor = false;
+            this.buttonMyStudents.Click += new System.EventHandler(this.buttonMyStudents_Click_1);
             // 
             // buttonLogout
             // 
@@ -281,6 +283,7 @@
             this.buttonLogout.TabIndex = 2;
             this.buttonLogout.Text = "🚪 Выйти";
             this.buttonLogout.UseVisualStyleBackColor = false;
+            this.buttonLogout.Click += new System.EventHandler(this.buttonLogout_Click_1);
             // 
             // statusStrip
             // 

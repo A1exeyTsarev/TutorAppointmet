@@ -21,6 +21,7 @@ namespace TutorAppointment_New
         {
             LoginStudents regstudents = new LoginStudents();
             regstudents.ShowDialog();
+            //this.Hide();
 
         }
 
@@ -28,7 +29,7 @@ namespace TutorAppointment_New
         {
             LoginTutors regtutors = new LoginTutors();
             regtutors.ShowDialog();
-
+            //this.Hide();
         }
 
         

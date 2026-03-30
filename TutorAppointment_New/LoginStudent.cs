@@ -10,19 +10,27 @@ using System.Windows.Forms;
 using TutorAppointment_New.AppData;
 using TutorAppointment_New;
 
-
 namespace TutorAppointment_New
 {
     public partial class LoginStudents : Form
     {
+        // Максимальная длина логина и пароля - 15 символов
+        private const int MAX_LOGIN_LENGTH = 15;
+        private const int MAX_PASSWORD_LENGTH = 15;
+        private const int MIN_LOGIN_LENGTH = 3;
+        private const int MIN_PASSWORD_LENGTH = 4;
+
         public LoginStudents()
         {
             InitializeComponent();
-        }
 
-        private void groupBox1_Enter(object sender, EventArgs e)
-        {
+            // Устанавливаем максимальную длину для полей ввода (15 символов)
+            Login.MaxLength = MAX_LOGIN_LENGTH;
+            Password.MaxLength = MAX_PASSWORD_LENGTH;
 
+            // Добавляем подсказки
+            Login.Text = "";
+            Password.Text = "";
         }
 
         // КНОПКА ВХОДА (Sign In)
@@ -31,10 +39,74 @@ namespace TutorAppointment_New
             string login = Login.Text.Trim();
             string password = Password.Text.Trim();
 
+            // ПРОВЕРКА 1: Пустые поля
             if (string.IsNullOrEmpty(login) || string.IsNullOrEmpty(password))
             {
                 MessageBox.Show("Введите логин и пароль!", "Предупреждение",
                     MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                Login.Focus();
+                return;
+            }
+
+            // ПРОВЕРКА 2: Минимальная длина логина
+            if (login.Length < MIN_LOGIN_LENGTH)
+            {
+                MessageBox.Show($"Логин должен содержать минимум {MIN_LOGIN_LENGTH} символа!",
+                    "Предупреждение", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                Login.Focus();
+                Login.SelectAll();
+                return;
+            }
+
+            // ПРОВЕРКА 3: Максимальная длина логина (15 символов)
+            if (login.Length > MAX_LOGIN_LENGTH)
+            {
+                MessageBox.Show($"Логин не может превышать {MAX_LOGIN_LENGTH} символов!\n" +
+                    $"Текущая длина: {login.Length} символов.",
+                    "Предупреждение", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                Login.Focus();
+                Login.SelectAll();
+                return;
+            }
+
+            // ПРОВЕРКА 4: Минимальная длина пароля
+            if (password.Length < MIN_PASSWORD_LENGTH)
+            {
+                MessageBox.Show($"Пароль должен содержать минимум {MIN_PASSWORD_LENGTH} символа!",
+                    "Предупреждение", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                Password.Focus();
+                Password.SelectAll();
+                return;
+            }
+
+            // ПРОВЕРКА 5: Максимальная длина пароля (15 символов)
+            if (password.Length > MAX_PASSWORD_LENGTH)
+            {
+                MessageBox.Show($"Пароль не может превышать {MAX_PASSWORD_LENGTH} символов!\n" +
+                    $"Текущая длина: {password.Length} символов.",
+                    "Предупреждение", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                Password.Focus();
+                Password.SelectAll();
+                return;
+            }
+
+            // ПРОВЕРКА 6: Логин не должен содержать специальные символы (только буквы и цифры)
+            if (!IsValidLogin(login))
+            {
+                MessageBox.Show("Логин может содержать только буквы латинского алфавита и цифры!",
+                    "Предупреждение", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                Login.Focus();
+                Login.SelectAll();
+                return;
+            }
+
+            // ПРОВЕРКА 7: Пароль не должен содержать пробелы
+            if (password.Contains(" "))
+            {
+                MessageBox.Show("Пароль не должен содержать пробелы!",
+                    "Предупреждение", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                Password.Focus();
+                Password.SelectAll();
                 return;
             }
 
@@ -69,6 +141,8 @@ namespace TutorAppointment_New
                 {
                     MessageBox.Show("Неверный логин или пароль!", "Ошибка",
                         MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    Password.Focus();
+                    Password.SelectAll();
                 }
             }
             catch (Exception ex)
@@ -91,6 +165,19 @@ namespace TutorAppointment_New
             }
         }
 
+        // Проверка валидности логина (только буквы и цифры)
+        private bool IsValidLogin(string login)
+        {
+            foreach (char c in login)
+            {
+                if (!char.IsLetterOrDigit(c))
+                {
+                    return false;
+                }
+            }
+            return true;
+        }
+
         // КНОПКА РЕГИСТРАЦИИ
         private void buttonReg_Click_1(object sender, EventArgs e)
         {
@@ -102,20 +189,37 @@ namespace TutorAppointment_New
         // КНОПКА НАЗАД
         private void Back_Click_1(object sender, EventArgs e)
         {
-
             this.Close(); // Закрываем текущую форму
         }
 
         private void Login_TextChanged(object sender, EventArgs e)
         {
-
+            // При вводе логина показываем сколько символов осталось
+            int remaining = MAX_LOGIN_LENGTH - Login.Text.Length;
+            if (remaining >= 0)
+            {
+                // Можно добавить label для отображения остатка символов
+                // labelLoginCounter.Text = $"Осталось: {remaining}";
+            }
         }
 
-        private void label3_Click(object sender, EventArgs e)
+      
+
+        // Дополнительно: обработка нажатия Enter для быстрого входа
+        private void Password_KeyPress(object sender, KeyPressEventArgs e)
         {
-
+            if (e.KeyChar == (char)Keys.Enter)
+            {
+                buttonSignIn_Click(sender, e);
+            }
         }
 
-        
+        private void Login_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            if (e.KeyChar == (char)Keys.Enter)
+            {
+                Password.Focus();
+            }
+        }
     }
 }

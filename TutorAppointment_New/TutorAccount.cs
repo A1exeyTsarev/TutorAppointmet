@@ -2,7 +2,7 @@
 using System.Linq;
 using System.Windows.Forms;
 using TutorAppointment_New.AppData;
-using TutorAppointment_New.AppData;
+
 
 namespace TutorAppointment_New
 {
@@ -172,6 +172,23 @@ namespace TutorAppointment_New
         private void statusStrip_ItemClicked(object sender, ToolStripItemClickedEventArgs e)
         {
 
+        }
+
+        private void buttonMyStudents_Click_1(object sender, EventArgs e)
+        {
+
+        }
+
+        private void buttonNewLesson_Click_1(object sender, EventArgs e)
+        {
+
+        }
+
+        private void buttonLogout_Click_1(object sender, EventArgs e)
+        {
+            LoginTutors LT = new LoginTutors();
+            LT.Show();
+            this.Close();
         }
     }
 }

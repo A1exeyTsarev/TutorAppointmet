@@ -127,9 +127,9 @@ namespace TutorAppointment_New
                             MessageBoxButtons.OK, MessageBoxIcon.Information);
 
                         // TODO: Открыть форму для администратора
-                        /*AdminForm adminForm = new AdminForm();
+                        AdminForm adminForm = new AdminForm();
                         adminForm.Show();
-                        this.Hide();*/
+                        this.Hide();
                     }
                     else if (tutor.role_id == 2) // Предполагаем, что role_id = 2 для Tutor
                     {
@@ -221,6 +221,11 @@ namespace TutorAppointment_New
             {
                 Password.Focus();
             }
+        }
+
+        private void Login_TextChanged_1(object sender, EventArgs e)
+        {
+
         }
     }
 }

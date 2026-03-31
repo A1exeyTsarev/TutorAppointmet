@@ -1,6 +1,6 @@
 ﻿namespace TutorAppointment_New
 {
-    partial class AdminForm
+    partial class AdminAccount
     {
         private System.ComponentModel.IContainer components = null;
 
@@ -299,7 +299,7 @@
             this.statusLabel.Size = new System.Drawing.Size(138, 17);
             this.statusLabel.Text = "Администратор онлайн";
             // 
-            // AdminForm
+            // AdminAccount
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
@@ -309,7 +309,7 @@
             this.Controls.Add(this.panelWelcome);
             this.Controls.Add(this.panelButtons);
             this.Controls.Add(this.statusStrip);
-            this.Name = "AdminForm";
+            this.Name = "AdminAccount";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Администратор - Управление записями";
             ((System.ComponentModel.ISupportInitialize)(this.dataGridViewBookings)).EndInit();

@@ -11,6 +11,8 @@ namespace TutorAppointment_New.AppData
     {
         // Инициализация при объявлении
         public static TutorAppointmentEntities model01 = new TutorAppointmentEntities();
-        
+
+        public static int CurrentUserId { get; set; }
+        public static string CurrentUserRole { get; set; }
     }
 }

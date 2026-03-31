@@ -227,5 +227,10 @@ namespace TutorAppointment_New
         {
 
         }
+
+        private void dataGridViewSchedule_CellContentClick_1(object sender, DataGridViewCellEventArgs e)
+        {
+
+        }
     }
 }

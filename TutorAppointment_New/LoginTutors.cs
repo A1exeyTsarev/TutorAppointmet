@@ -127,7 +127,7 @@ namespace TutorAppointment_New
                             MessageBoxButtons.OK, MessageBoxIcon.Information);
 
                         // TODO: Открыть форму для администратора
-                        AdminForm adminForm = new AdminForm();
+                        AdminAccount adminForm = new AdminAccount(tutor.tutor_id, tutor.fio);
                         adminForm.Show();
                         this.Hide();
                     }

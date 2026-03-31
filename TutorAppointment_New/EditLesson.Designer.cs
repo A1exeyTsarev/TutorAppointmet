@@ -102,6 +102,7 @@
             this.buttonSave.TabIndex = 5;
             this.buttonSave.Text = "Сохранить";
             this.buttonSave.UseVisualStyleBackColor = true;
+            this.buttonSave.Click += new System.EventHandler(this.buttonSave_Click_1);
             // 
             // buttonBack
             // 
@@ -150,10 +151,8 @@
             this.Notes.Name = "Notes";
             this.Notes.Size = new System.Drawing.Size(100, 20);
             this.Notes.TabIndex = 18;
-            //this.Notes.TextChanged += new System.EventHandler(this.Notes_TextChanged);
             // 
             // label6
-
             // 
             this.label6.AutoSize = true;
             this.label6.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
@@ -183,6 +182,7 @@
             this.Controls.Add(this.label1);
             this.Name = "EditLesson";
             this.Text = "EditLesson";
+            this.Load += new System.EventHandler(this.EditLesson_Load);
             this.ResumeLayout(false);
             this.PerformLayout();
 

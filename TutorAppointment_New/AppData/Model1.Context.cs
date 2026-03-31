@@ -32,7 +32,6 @@ namespace TutorAppointment_New.AppData
         public DbSet<student> student { get; set; }
         public DbSet<Subjects> Subjects { get; set; }
         public DbSet<subjectsTutor> subjectsTutor { get; set; }
-        public DbSet<sysdiagrams> sysdiagrams { get; set; }
         public DbSet<tutor> tutor { get; set; }
     }
 }

@@ -5,21 +5,19 @@ using TutorAppointment_New.AppData;
 
 namespace TutorAppointment_New
 {
-    public partial class EditLesson : Form
+    public partial class AdminEditLesson : Form
     {
         private booking currentBooking;
-        private int studentId;
-        private StudentAccount studentAccountForm;
+        private AdminAccount adminAccount;
 
         // Ограничения для комментариев
-        private const int MAX_NOTES_LENGTH = 35; // Максимальная длина комментария
+        private const int MAX_NOTES_LENGTH = 35;
 
-        public EditLesson(booking booking, int studentId, StudentAccount studentAccount)
+        public AdminEditLesson(booking booking, AdminAccount account)
         {
             InitializeComponent();
             currentBooking = booking;
-            this.studentId = studentId;
-            studentAccountForm = studentAccount;
+            adminAccount = account;
 
             // Настройка DateTimePicker
             ConfigureDateTimePickers();
@@ -39,7 +37,7 @@ namespace TutorAppointment_New
             Subject.SelectedIndexChanged += Subject_SelectedIndexChanged;
             StartTime.ValueChanged += StartTime_ValueChanged;
             EndTime.ValueChanged += EndTime_ValueChanged;
-            Notes.KeyPress += Notes_KeyPress; // Обработчик нажатия клавиш
+            Notes.KeyPress += Notes_KeyPress;
         }
 
         private void ConfigureDateTimePickers()
@@ -67,11 +65,11 @@ namespace TutorAppointment_New
 
         private void LoadLessonData()
         {
-            // Исправлено: проверяем на null и преобразуем TimeSpan? в TimeSpan
+            // Проверяем на null и преобразуем TimeSpan? в TimeSpan
             TimeSpan startTime = currentBooking.start_time ?? TimeSpan.Zero;
             TimeSpan endTime = currentBooking.end_time ?? TimeSpan.Zero;
 
-            // ИСПРАВЛЕНО: проверяем date на null и преобразуем DateTime? в DateTime
+            // Проверяем date на null и преобразуем DateTime? в DateTime
             DateTime bookingDate = currentBooking.date ?? DateTime.Today;
 
             // Загружаем данные текущей записи
@@ -88,7 +86,7 @@ namespace TutorAppointment_New
                 var subjects = AppConnect.model01.Subjects.ToList();
                 Subject.DataSource = subjects;
                 Subject.DisplayMember = "subject_name";
-                Subject.ValueMember = "subjects_id";
+                Subject.ValueMember = "subjects_id";  // ИСПРАВЛЕНО: subjects_id
 
                 // Устанавливаем выбранный предмет
                 var selectedSubject = subjects.FirstOrDefault(s => s.subjects_id == currentBooking.subject_id);
@@ -156,7 +154,6 @@ namespace TutorAppointment_New
         private bool IsValidTime(DateTime time)
         {
             int hour = time.Hour;
-            // Запрещаем время с 22:00 до 08:00
             if (hour >= 22 || hour < 8)
             {
                 return false;
@@ -173,7 +170,6 @@ namespace TutorAppointment_New
                     "Недопустимое время: с 22:00 до 08:00.",
                     "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Warning);
 
-                // Устанавливаем ближайшее допустимое время
                 DateTime newTime = StartTime.Value.Date.AddHours(8);
                 if (StartTime.Value.Hour >= 22)
                 {
@@ -196,7 +192,6 @@ namespace TutorAppointment_New
                     "Недопустимое время: с 22:00 до 08:00.",
                     "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Warning);
 
-                // Устанавливаем ближайшее допустимое время
                 DateTime newTime = EndTime.Value.Date.AddHours(20);
                 if (EndTime.Value.Hour < 8)
                 {
@@ -206,15 +201,13 @@ namespace TutorAppointment_New
             }
         }
 
-        // Ограничение для комментариев - просто блокируем ввод после 35 символов
+        // Ограничение для комментариев - блокируем ввод после 35 символов
         private void Notes_KeyPress(object sender, KeyPressEventArgs e)
         {
-            // Если достигнут лимит и нажата не клавиша Backspace
             if (Notes.Text.Length >= MAX_NOTES_LENGTH && e.KeyChar != (char)Keys.Back)
             {
-                e.Handled = true; // Блокируем ввод символа
+                e.Handled = true;
 
-                // Показываем предупреждение только один раз
                 if (Notes.Tag == null || (bool)Notes.Tag == false)
                 {
                     Notes.Tag = true;
@@ -246,7 +239,7 @@ namespace TutorAppointment_New
                     return;
                 }
 
-                // ПРОВЕРКА для комментария: максимальная длина
+                // Проверка для комментария: максимальная длина
                 string notes = Notes.Text.Trim();
                 if (notes.Length > MAX_NOTES_LENGTH)
                 {
@@ -312,14 +305,6 @@ namespace TutorAppointment_New
                     return;
                 }
 
-                // Проверка даты (нельзя изменить на прошедшую дату)
-                if (StartTime.Value.Date < DateTime.Today)
-                {
-                    MessageBox.Show("Нельзя изменить дату на прошедшую!",
-                        "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                    return;
-                }
-
                 // Получаем выбранные объекты
                 var selectedSubject = Subject.SelectedItem as Subjects;
                 var selectedTutor = Tutor.SelectedItem as tutor;
@@ -357,7 +342,7 @@ namespace TutorAppointment_New
                 currentBooking.date = StartTime.Value.Date;
                 currentBooking.start_time = StartTime.Value.TimeOfDay;
                 currentBooking.end_time = EndTime.Value.TimeOfDay;
-                currentBooking.notes = notes; // Сохраняем комментарий
+                currentBooking.notes = notes;
 
                 // Сохраняем изменения
                 int rowsAffected = AppConnect.model01.SaveChanges();
@@ -367,11 +352,10 @@ namespace TutorAppointment_New
                     MessageBox.Show("Запись успешно обновлена!", "Успех",
                         MessageBoxButtons.OK, MessageBoxIcon.Information);
 
-                    // Обновляем расписание на главной форме
-                    if (studentAccountForm != null)
+                    // Обновляем таблицу в форме администратора
+                    if (adminAccount != null)
                     {
-                        studentAccountForm.RefreshSchedule();
-                        studentAccountForm.Show();
+                        adminAccount.RefreshData();
                     }
 
                     this.Close();
@@ -391,22 +375,7 @@ namespace TutorAppointment_New
 
         private void ButtonBack_Click(object sender, EventArgs e)
         {
-            // Возвращаемся на страницу студента
-            if (studentAccountForm != null)
-            {
-                studentAccountForm.Show();
-            }
             this.Close();
-        }
-
-        private void EditLesson_Load(object sender, EventArgs e)
-        {
-
-        }
-
-        private void buttonSave_Click_1(object sender, EventArgs e)
-        {
-
         }
     }
 }

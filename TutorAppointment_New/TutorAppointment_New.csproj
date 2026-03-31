@@ -53,11 +53,17 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="AdminForm.cs">
+    <Compile Include="AdminAccount.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="AdminForm.Designer.cs">
-      <DependentUpon>AdminForm.cs</DependentUpon>
+    <Compile Include="AdminAccount.Designer.cs">
+      <DependentUpon>AdminAccount.cs</DependentUpon>
+    </Compile>
+    <Compile Include="AdminEditLesson.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="AdminEditLesson.Designer.cs">
+      <DependentUpon>AdminEditLesson.cs</DependentUpon>
     </Compile>
     <Compile Include="AppData\AppConnect.cs" />
     <Compile Include="AppData\booking.cs">
@@ -94,9 +100,6 @@
       <DependentUpon>Model1.tt</DependentUpon>
     </Compile>
     <Compile Include="AppData\subjectsTutor.cs">
-      <DependentUpon>Model1.tt</DependentUpon>
-    </Compile>
-    <Compile Include="AppData\sysdiagrams.cs">
       <DependentUpon>Model1.tt</DependentUpon>
     </Compile>
     <Compile Include="AppData\tutor.cs">
@@ -170,8 +173,11 @@
     <Compile Include="TutorAccount.Designer.cs">
       <DependentUpon>TutorAccount.cs</DependentUpon>
     </Compile>
-    <EmbeddedResource Include="AdminForm.resx">
-      <DependentUpon>AdminForm.cs</DependentUpon>
+    <EmbeddedResource Include="AdminAccount.resx">
+      <DependentUpon>AdminAccount.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="AdminEditLesson.resx">
+      <DependentUpon>AdminEditLesson.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="EditLesson.resx">
       <DependentUpon>EditLesson.cs</DependentUpon>
@@ -240,8 +246,8 @@
   <ItemGroup>
     <Content Include="AppData\Model1.Context.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
-      <LastGenOutput>Model1.Context.cs</LastGenOutput>
       <DependentUpon>Model1.edmx</DependentUpon>
+      <LastGenOutput>Model1.Context.cs</LastGenOutput>
     </Content>
     <Content Include="AppData\Model1.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
@@ -249,6 +255,7 @@
       <LastGenOutput>Model1.cs</LastGenOutput>
     </Content>
     <Content Include="Resources\фон.jpg" />
+    <Content Include="фон2.jpg" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

@@ -192,16 +192,7 @@ namespace TutorAppointment_New
             this.Close(); // Закрываем текущую форму
         }
 
-        private void Login_TextChanged(object sender, EventArgs e)
-        {
-            // При вводе логина показываем сколько символов осталось
-            int remaining = MAX_LOGIN_LENGTH - Login.Text.Length;
-            if (remaining >= 0)
-            {
-                // Можно добавить label для отображения остатка символов
-                // labelLoginCounter.Text = $"Осталось: {remaining}";
-            }
-        }
+       
 
       
 

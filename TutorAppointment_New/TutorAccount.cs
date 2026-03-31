@@ -3,7 +3,6 @@ using System.Linq;
 using System.Windows.Forms;
 using TutorAppointment_New.AppData;
 
-
 namespace TutorAppointment_New
 {
     public partial class TutorAccount : Form
@@ -18,14 +17,17 @@ namespace TutorAppointment_New
 
             LoadTutorInfo();
             LoadSchedule();
+            
+            // Подписываемся на событие двойного клика (если нужно)
+            // dataGridViewSchedule.CellDoubleClick += DataGridViewSchedule_CellDoubleClick;
         }
 
         // Загрузка информации о преподавателе
         private void LoadTutorInfo()
         {
-            using (var db = new TutorAppointmentEntities())
+            try
             {
-                var tutor = db.tutor.Find(tutorId);
+                var tutor = AppConnect.model01.tutor.Find(tutorId);
 
                 if (tutor != null)
                 {
@@ -34,9 +36,9 @@ namespace TutorAppointment_New
                     labelEmail.Text = $"Email: {tutor.mail ?? "не указан"}";
 
                     // Загружаем предметы
-                    var subjects = db.subjectsTutor
+                    var subjects = AppConnect.model01.subjectsTutor
                         .Where(st => st.tutor_id == tutorId)
-                        .Join(db.Subjects,
+                        .Join(AppConnect.model01.Subjects,
                               st => st.subject_id,
                               s => s.subjects_id,
                               (st, s) => s.subject_name)
@@ -47,59 +49,74 @@ namespace TutorAppointment_New
                         : "Предметы: не указаны";
                 }
             }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Ошибка загрузки информации: " + ex.Message);
+            }
         }
 
-        // Загрузка расписания
-        // Загрузка расписания
+        // Загрузка расписания (как у студента - без AutoGenerateColumns = false)
         private void LoadSchedule()
         {
             try
             {
-                using (var db = new TutorAppointmentEntities())
-                {
-                    var bookings = db.booking
-                        .Where(b => b.tutor_id == tutorId)
-                        .Join(db.student,
-                              b => b.student_id,
-                              s => s.student_id,
-                              (b, s) => new
-                              {
-                                  booking = b,
-                                  student = s
-                              })
-                        .OrderBy(x => x.booking.date)
-                        .ThenBy(x => x.booking.start_time)
-                        .ToList();
+                var bookings = AppConnect.model01.booking
+                    .Where(b => b.tutor_id == tutorId)
+                    .Join(AppConnect.model01.student,
+                          b => b.student_id,
+                          s => s.student_id,
+                          (b, s) => new
+                          {
+                              booking = b,
+                              student = s
+                          })
+                    .OrderBy(x => x.booking.date)
+                    .ThenBy(x => x.booking.start_time)
+                    .ToList();
 
-                    var schedule = bookings
-                        .Select(x => new
-                        {
-                            // Исправлено: проверяем, что date не является минимальным значением (не указана)
-                            Дата = x.booking.date != DateTime.MinValue ? x.booking.date.ToString("dd.MM.yyyy") : "не указана",
-                            Время = x.booking.start_time + " - " + x.booking.end_time,
-                            Ученик = x.student.fio,
-                            Класс = x.student.grade,
-                            Комментарий = x.booking.notes ?? "",
-                            Статус = GetStatusName(x.booking.status_id, db)
-                        })
-                        .ToList();
-
-                    // ОЧИЩАЕМ старые колонки перед добавлением новых
-                    dataGridViewSchedule.Columns.Clear();
-
-                    dataGridViewSchedule.DataSource = schedule;
-                    labelScheduleCount.Text = $"Всего занятий: {schedule.Count}";
-
-                    // Настройка ширины колонок
-                    if (dataGridViewSchedule.Columns.Count > 0)
+                var schedule = bookings
+                    .Select(x => new
                     {
+                        booking_id = x.booking.booking_id, // Добавляем ID для редактирования
+                        Дата = x.booking.date.HasValue && x.booking.date.Value != DateTime.MinValue
+                            ? x.booking.date.Value.ToString("dd.MM.yyyy")
+                            : "не указана",
+                        Время = $"{FormatTimeSpan(x.booking.start_time)} - {FormatTimeSpan(x.booking.end_time)}",
+                        Ученик = x.student.fio ?? "не указан",
+                        Класс = x.student.grade ?? "не указан",
+                        Комментарий = x.booking.notes ?? "",
+                        Статус = GetStatusName(x.booking.status_id)
+                    })
+                    .ToList();
+
+                // Очищаем старые колонки перед добавлением новых
+                dataGridViewSchedule.Columns.Clear();
+
+                dataGridViewSchedule.DataSource = schedule;
+
+                // Скрываем колонку с ID (не показываем пользователю)
+                if (dataGridViewSchedule.Columns["booking_id"] != null)
+                {
+                    dataGridViewSchedule.Columns["booking_id"].Visible = false;
+                }
+
+                labelScheduleCount.Text = $"Всего занятий: {schedule.Count}";
+
+                // Настраиваем ширину колонок
+                if (dataGridViewSchedule.Columns.Count > 0)
+                {
+                    if (dataGridViewSchedule.Columns["Дата"] != null)
                         dataGridViewSchedule.Columns["Дата"].Width = 100;
+                    if (dataGridViewSchedule.Columns["Время"] != null)
                         dataGridViewSchedule.Columns["Время"].Width = 120;
+                    if (dataGridViewSchedule.Columns["Ученик"] != null)
                         dataGridViewSchedule.Columns["Ученик"].Width = 150;
+                    if (dataGridViewSchedule.Columns["Класс"] != null)
                         dataGridViewSchedule.Columns["Класс"].Width = 80;
+                    if (dataGridViewSchedule.Columns["Комментарий"] != null)
                         dataGridViewSchedule.Columns["Комментарий"].Width = 150;
+                    if (dataGridViewSchedule.Columns["Статус"] != null)
                         dataGridViewSchedule.Columns["Статус"].Width = 100;
-                    }
                 }
             }
             catch (Exception ex)
@@ -107,12 +124,20 @@ namespace TutorAppointment_New
                 MessageBox.Show("Ошибка загрузки расписания: " + ex.Message);
             }
         }
+
+        // Вспомогательный метод для форматирования TimeSpan?
+        private string FormatTimeSpan(TimeSpan? time)
+        {
+            if (time == null) return "не указано";
+            return time.Value.ToString(@"hh\:mm");
+        }
+
         // Получить статус
-        private string GetStatusName(int? statusId, TutorAppointmentEntities db)
+        private string GetStatusName(int? statusId)
         {
             if (statusId == null) return "Не указан";
 
-            var status = db.status
+            var status = AppConnect.model01.status
                 .Where(s => s.status_id == statusId)
                 .Select(s => s.status_name)
                 .FirstOrDefault();
@@ -120,15 +145,17 @@ namespace TutorAppointment_New
             return status ?? "Не указан";
         }
 
+        // Обновление расписания
+        public void RefreshSchedule()
+        {
+            LoadSchedule();
+        }
+
         // Кнопка "Создать занятие"
         private void buttonNewLesson_Click(object sender, EventArgs e)
         {
             MessageBox.Show("Форма создания занятия будет здесь", "Информация",
                 MessageBoxButtons.OK, MessageBoxIcon.Information);
-            // Открываем форму создания занятия
-            // CreateLessonForm createForm = new CreateLessonForm(tutorId);
-            // createForm.ShowDialog();
-            // LoadSchedule();
         }
 
         // Кнопка "Мои ученики"
@@ -136,59 +163,50 @@ namespace TutorAppointment_New
         {
             MessageBox.Show("Список учеников будет здесь", "Информация",
                 MessageBoxButtons.OK, MessageBoxIcon.Information);
-            // Открываем форму со списком учеников
-            // MyStudentsForm studentsForm = new MyStudentsForm(tutorId);
-            // studentsForm.ShowDialog();
         }
 
         // Кнопка "Выйти"
         private void buttonLogout_Click(object sender, EventArgs e)
         {
-            LoginTutors loginForm = new LoginTutors();
-            loginForm.Show();
-            this.Close();
+            DialogResult result = MessageBox.Show("Вы уверены, что хотите выйти?",
+                "Подтверждение выхода", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+
+            if (result == DialogResult.Yes)
+            {
+                LoginTutors loginForm = new LoginTutors();
+                loginForm.Show();
+                this.Close();
+            }
+        }
+
+        private void buttonMyStudents_Click_1(object sender, EventArgs e)
+        {
+            MessageBox.Show("Список учеников будет здесь", "Информация",
+                MessageBoxButtons.OK, MessageBoxIcon.Information);
+        }
+
+        private void buttonNewLesson_Click_1(object sender, EventArgs e)
+        {
+            MessageBox.Show("Форма создания занятия будет здесь", "Информация",
+                MessageBoxButtons.OK, MessageBoxIcon.Information);
+        }
+
+        private void buttonLogout_Click_1(object sender, EventArgs e)
+        {
+            DialogResult result = MessageBox.Show("Вы уверены, что хотите выйти?",
+                "Подтверждение выхода", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+
+            if (result == DialogResult.Yes)
+            {
+                LoginTutors loginForm = new LoginTutors();
+                loginForm.Show();
+                this.Close();
+            }
         }
 
         private void panelWelcome_Paint(object sender, PaintEventArgs e)
         {
 
-        }
-
-        private void dataGridViewSchedule_CellContentClick(object sender, DataGridViewCellEventArgs e)
-        {
-
-        }
-
-        private void panelScheduleHeader_Paint(object sender, PaintEventArgs e)
-        {
-
-        }
-
-        private void panelButtons_Paint(object sender, PaintEventArgs e)
-        {
-
-        }
-
-        private void statusStrip_ItemClicked(object sender, ToolStripItemClickedEventArgs e)
-        {
-
-        }
-
-        private void buttonMyStudents_Click_1(object sender, EventArgs e)
-        {
-
-        }
-
-        private void buttonNewLesson_Click_1(object sender, EventArgs e)
-        {
-
-        }
-
-        private void buttonLogout_Click_1(object sender, EventArgs e)
-        {
-            LoginTutors LT = new LoginTutors();
-            LT.Show();
-            this.Close();
         }
     }
 }

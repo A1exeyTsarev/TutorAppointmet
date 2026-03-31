@@ -82,7 +82,7 @@
             this.dataGridViewSchedule.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
             this.dataGridViewSchedule.Size = new System.Drawing.Size(800, 229);
             this.dataGridViewSchedule.TabIndex = 4;
-            this.dataGridViewSchedule.CellContentClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGridViewSchedule_CellContentClick);
+            //this.dataGridViewSchedule.CellContentClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGridViewSchedule_CellContentClick);
             // 
             // DateColumn
             // 
@@ -136,7 +136,6 @@
             this.panelScheduleHeader.Name = "panelScheduleHeader";
             this.panelScheduleHeader.Size = new System.Drawing.Size(800, 32);
             this.panelScheduleHeader.TabIndex = 5;
-            this.panelScheduleHeader.Paint += new System.Windows.Forms.PaintEventHandler(this.panelScheduleHeader_Paint);
             // 
             // labelScheduleTitle
             // 
@@ -232,7 +231,6 @@
             this.panelButtons.Name = "panelButtons";
             this.panelButtons.Size = new System.Drawing.Size(800, 57);
             this.panelButtons.TabIndex = 8;
-            this.panelButtons.Paint += new System.Windows.Forms.PaintEventHandler(this.panelButtons_Paint);
             // 
             // buttonNewLesson
             // 
@@ -295,7 +293,6 @@
             this.statusStrip.Size = new System.Drawing.Size(800, 22);
             this.statusStrip.TabIndex = 6;
             this.statusStrip.Text = "statusStrip";
-            this.statusStrip.ItemClicked += new System.Windows.Forms.ToolStripItemClickedEventHandler(this.statusStrip_ItemClicked);
             // 
             // statusLabel
             // 

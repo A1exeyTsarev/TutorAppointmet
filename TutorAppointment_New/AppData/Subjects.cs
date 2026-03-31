@@ -16,14 +16,14 @@ namespace TutorAppointment_New.AppData
     {
         public Subjects()
         {
-            this.subjectsTutor = new HashSet<subjectsTutor>();
             this.booking = new HashSet<booking>();
+            this.subjectsTutor = new HashSet<subjectsTutor>();
         }
     
         public int subjects_id { get; set; }
         public string subject_name { get; set; }
     
-        public virtual ICollection<subjectsTutor> subjectsTutor { get; set; }
         public virtual ICollection<booking> booking { get; set; }
+        public virtual ICollection<subjectsTutor> subjectsTutor { get; set; }
     }
 }

@@ -83,6 +83,7 @@
             this.dataGridViewSchedule.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
             this.dataGridViewSchedule.Size = new System.Drawing.Size(800, 241);
             this.dataGridViewSchedule.TabIndex = 4;
+            this.dataGridViewSchedule.CellContentClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGridViewSchedule_CellContentClick_1);
             // 
             // DateColumn
             // 

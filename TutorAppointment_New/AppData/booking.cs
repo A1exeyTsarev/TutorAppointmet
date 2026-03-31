@@ -15,18 +15,18 @@ namespace TutorAppointment_New.AppData
     public partial class booking
     {
         public int booking_id { get; set; }
+        public int subject_id { get; set; }
         public int tutor_id { get; set; }
         public int student_id { get; set; }
         public string notes { get; set; }
         public int status_id { get; set; }
-        public System.DateTime date { get; set; }
+        public Nullable<System.DateTime> date { get; set; }
         public Nullable<System.TimeSpan> start_time { get; set; }
         public Nullable<System.TimeSpan> end_time { get; set; }
-        public int subject_id { get; set; }
     
         public virtual status status { get; set; }
         public virtual student student { get; set; }
-        public virtual tutor tutor { get; set; }
         public virtual Subjects Subjects { get; set; }
+        public virtual tutor tutor { get; set; }
     }
 }
